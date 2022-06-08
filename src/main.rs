@@ -1,6 +1,6 @@
 use std::{io::Read, path::PathBuf};
 
-use console::{style, StyledObject, Term};
+use console::{style, StyledObject};
 use indicatif::ProgressIterator;
 use structopt::StructOpt;
 use timer::{Status, Timer};
@@ -36,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
         Ok(buf)
     })?)?;
     let doc = graphql_parser::parse_query::<&str>(&raw)?;
-    let queries = parser::parse_document(&doc);
+    let queries = parser::parse_document(&doc)?;
 
     // Set up the timer.
     let mut timer = Timer::new(&opt.url, opt.header, opt.variables)?;

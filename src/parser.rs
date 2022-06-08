@@ -12,7 +12,7 @@ use graphql_parser::{
 };
 use itertools::Itertools;
 
-pub(crate) fn parse_document<'a, T>(doc: &'a Document<'a, T>) -> Vec<String>
+pub(crate) fn parse_document<'a, T>(doc: &'a Document<'a, T>) -> anyhow::Result<Vec<String>>
 where
     T: Text<'a> + Debug,
     T::Value: Display + Debug,
@@ -31,10 +31,10 @@ where
         Definition::Operation(OperationDefinition::Query(query)) => Some(query),
         _ => None,
     }) {
-        handle_query(query, &mut field_queries, &fragments);
+        handle_query(query, &mut field_queries, &fragments)?;
     }
 
-    field_queries
+    Ok(field_queries)
 }
 
 fn handle_query<'a, 'b, T>(
